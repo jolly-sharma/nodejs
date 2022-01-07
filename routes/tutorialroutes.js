@@ -1,7 +1,8 @@
-const express = require("express");
-
-  const Tutorial = require("../controllers/tutorialcontroller.js");
-  const router = express.Router();
+const express = require("express")
+  const Tutorial = require("../controllers/tutorialcontroller.js")
+  const tutorialvalidator = require('../validator/valid')
+  const router = express.Router()
+  const { validate } = require("express-validation");
 
 
 
@@ -15,21 +16,29 @@ const express = require("express");
  *         - title
  *         - description
  *         - published
+ *         - createdAt
+ *         - updatedAt
  *       properties:
  *         id:
  *           type: integer
  *           description: The auto-generated id
  *         title:
  *           type: string
+ *           minlength: 1
+ *           maxlength: 100
  *           description: Tutorial title
  *         description:
  *           type: string
+ *           minlength: 3
+ *           maxlength: 5000
  *           description: Description of the tutorial
  *       example:
  *         id: 1
  *         title: Nodejs
  *         description: Tutorial of node js
  *         published: true
+ *         createdAt: 2022-01-05T15:42:14.654Z
+ *         updatedAt: 2022-01-05T15:42:14.654Z
  */
 
 
@@ -66,7 +75,7 @@ const express = require("express");
 
 
 
-  router.post("/create", Tutorial.create);
+  router.post("/create", validate(tutorialvalidator.createTutorialValidator), Tutorial.create);
 
   /**
  * @swagger
@@ -84,6 +93,8 @@ const express = require("express");
  *               items:
  *                 $ref: '#/components/schemas/Tutorial'
  */
+
+
   router.get("/get-all", Tutorial.findAll);
 
 

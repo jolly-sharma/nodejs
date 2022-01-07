@@ -59,6 +59,19 @@ exports.findOne = (req, res) => {
 
 //search by title
 exports.findAll = (req, res) => {
+  const title = req.params.title;
+  const condition = title ? { title: {$regex: new RegExp(title), $options: "n"}} : {};
+  Tutorial.find(condition)
+  .then(data => {
+    res.send(data);
+  })
+  .catch(err => {
+    res.status(404).send({
+      message: err.message || "404 not found"
+    });
+  });
+};
+/*exports.findAll = (req, res) => {
   Tutorial.find(req.params.title)
     .then((data) => {
       if (!data) {
@@ -78,7 +91,7 @@ exports.findAll = (req, res) => {
         message: "error occurred while getting tutorial with title. " + req.params.title,
       });
     });
-};
+};*/
 
 
 // Update a tutorial with the id 
