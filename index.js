@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require("mongoose");
+const expressvalidator = require('express-validator');
 const tutorial = require('./routes/tutorialroutes');
 const swaggerUi = require("swagger-ui-express");
 const swaggerjsdoc = require("swagger-jsdoc");
@@ -41,6 +42,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use('/', tutorial);
 app.use("/", postRoutes);
+app.use(expressvalidator());
 
 app.get('/', (req, res) => {
     res.json({"message": "Server is running"});
