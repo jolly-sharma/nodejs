@@ -1,10 +1,8 @@
-const express = require("express")
-  const Tutorial = require("../controllers/tutorialcontroller.js")
-  const tutorialvalidator = require('../validator/valid')
-  const router = express.Router()
-  const { validate } = require("express-validation");
-
-
+const express = require("express");
+const Tutorial = require("../controllers/tutorialcontroller.js");
+const tutorialvalidator = require("../validator/valid");
+const router = express.Router();
+const { validate } = require("express-validation");
 
 /**
  * @swagger
@@ -41,14 +39,12 @@ const express = require("express")
  *         updatedAt: 2022-01-05T15:42:14.654Z
  */
 
-
- /**
-  * @swagger
-  * tags:
-  *   name: Tutorials
-  *   description: The Tutorials API
-  */
-
+/**
+ * @swagger
+ * tags:
+ *   name: Tutorials
+ *   description: The Tutorials API
+ */
 
 /**
  * @swagger
@@ -73,11 +69,13 @@ const express = require("express")
  *         description: Server error
  */
 
+router.post(
+  "/create",
+  validate(tutorialvalidator.createTutorialValidator),
+  Tutorial.create
+);
 
-
-  router.post("/create", validate(tutorialvalidator.createTutorialValidator), Tutorial.create);
-
-  /**
+/**
  * @swagger
  * /get-all:
  *   get:
@@ -94,12 +92,9 @@ const express = require("express")
  *                 $ref: '#/components/schemas/Tutorial'
  */
 
+router.get("/get-all", Tutorial.findAll);
 
-  router.get("/get-all", Tutorial.findAll);
-
-
-
-  /**
+/**
  * @swagger
  * /tutorials/{id}:
  *   get:
@@ -123,7 +118,7 @@ const express = require("express")
  *         description: The tutorial was not found
  */
 
-  router.get("/tutorials/:id", Tutorial.findOne);
+router.get("/tutorials/:id", Tutorial.findOne);
 
 /**
  * @swagger
@@ -149,9 +144,9 @@ const express = require("express")
  *         description: The tutorial was not found
  */
 
-  router.get("/tutorial/:title", Tutorial.findAll);
+router.get("/tutorial/:title", Tutorial.findnew);
 
-  /**
+/**
  * @swagger
  * /tutorials/{id}:
  *  put:
@@ -183,10 +178,9 @@ const express = require("express")
  *        description: Some error happened
  */
 
-  router.put("/tutorials/:id", Tutorial.update);
+router.put("/tutorials/:id", Tutorial.update);
 
-
-  /**
+/**
  * @swagger
  * /tutorials/{id}:
  *   delete:
@@ -199,7 +193,7 @@ const express = require("express")
  *           type: string
  *         required: true
  *         description: Tutorial id
- * 
+ *
  *     responses:
  *       200:
  *         description: Tutorial is deleted
@@ -207,10 +201,6 @@ const express = require("express")
  *         description: Tutorial not found
  */
 
+router.delete("/tutorials/:id", Tutorial.delete);
 
-  router.delete("/tutorials/:id", Tutorial.delete);
-
-  module.exports = router;
-
-
-
+module.exports = router;

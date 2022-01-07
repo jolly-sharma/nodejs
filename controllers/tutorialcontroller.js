@@ -14,8 +14,7 @@ exports.create = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message:
-          err.message || "error occurred creating the tutorial ",
+        message: err.message || "error occurred creating the tutorial ",
       });
     });
 };
@@ -28,8 +27,7 @@ exports.findAll = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message:
-          err.message || "error occurred while getting tutorial.",
+        message: err.message || "error occurred while getting tutorial.",
       });
     });
 };
@@ -58,43 +56,23 @@ exports.findOne = (req, res) => {
 };
 
 //search by title
-exports.findAll = (req, res) => {
+exports.findnew = (req, res) => {
   const title = req.params.title;
-  const condition = title ? { title: {$regex: new RegExp(title), $options: "n"}} : {};
+  const condition = title
+    ? { title: { $regex: new RegExp(title), $options: "n" } }
+    : {};
   Tutorial.find(condition)
-  .then(data => {
-    res.send(data);
-  })
-  .catch(err => {
-    res.status(404).send({
-      message: err.message || "404 not found"
-    });
-  });
-};
-/*exports.findAll = (req, res) => {
-  Tutorial.find(req.params.title)
     .then((data) => {
-      if (!data) {
-        return res.status(404).send({
-          message: "tutorial not found with title " + req.params.title,
-        });
-      }
       res.send(data);
     })
     .catch((err) => {
-      if (err.kind === "ObjectId"){
-        return res.status(404).send({
-          message: "tutorial not found with title " + req.params.title,
-        });
-      }
-      return res.status(500).send({
-        message: "error occurred while getting tutorial with title. " + req.params.title,
+      res.status(404).send({
+        message: err.message || "404 not found",
       });
     });
-};*/
+};
 
-
-// Update a tutorial with the id 
+// Update a tutorial with the id
 exports.update = (req, res) => {
   Tutorial.findByIdAndUpdate(
     req.params.id,
@@ -123,7 +101,7 @@ exports.update = (req, res) => {
     });
 };
 
-// Delete a tutorial with id 
+// Delete a tutorial with id
 exports.delete = (req, res) => {
   Tutorial.findByIdAndRemove(req.params.id)
     .then((data) => {
