@@ -3,6 +3,13 @@ const Tutorial = require("../controllers/tutorialcontroller.js");
 const tutorialvalidator = require("../validator/valid");
 const router = express.Router();
 const { validate } = require("express-validation");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const User = require("../models/tutorialmodel");
+const Joi = require("@hapi/joi");
+//const verify = require("../middlewares/validateToken.js");
+
+
 
 /**
  * @swagger
@@ -69,82 +76,8 @@ const { validate } = require("express-validation");
  *         description: Server error
  */
 
-router.post(
-  "/create",
-  validate(tutorialvalidator.createTutorialValidator),
-  Tutorial.create
-);
+router.post("/create", Tutorial.create);
 
-/**
- * @swagger
- * /get-all:
- *   get:
- *     summary: Get list of the tutorials
- *     tags: [Tutorials]
- *     responses:
- *       200:
- *         description: The list of the tutorials
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Tutorial'
- */
-
-router.get("/get-all", Tutorial.findAll);
-
-/**
- * @swagger
- * /tutorials/{id}:
- *   get:
- *     summary: Get tutorial by id
- *     tags: [Tutorials]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: The tutorial id
- *     responses:
- *       200:
- *         description: The tutorial description by id
- *         contens:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Tutorial'
- *       404:
- *         description: The tutorial was not found
- */
-
-router.get("/tutorials/:id", Tutorial.findOne);
-
-/**
- * @swagger
- * /tutorials/{title}:
- *   get:
- *     summary: Search tutorials by title
- *     tags: [Tutorials]
- *     parameters:
- *       - in: path
- *         name: title
- *         schema:
- *           type: string
- *         required: true
- *         description: The tutorial title
- *     responses:
- *       200:
- *         description: The tutorial description by Title
- *         contens:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Tutorial'
- *       404:
- *         description: The tutorial was not found
- */
-
-router.get("/tutorial/:title", Tutorial.findnew);
 
 /**
  * @swagger
@@ -180,6 +113,7 @@ router.get("/tutorial/:title", Tutorial.findnew);
 
 router.put("/tutorials/:id", Tutorial.update);
 
+
 /**
  * @swagger
  * /tutorials/{id}:
@@ -202,5 +136,96 @@ router.put("/tutorials/:id", Tutorial.update);
  */
 
 router.delete("/tutorials/:id", Tutorial.delete);
+
+
+/**
+ * @swagger
+ * /get-all:
+ *   get:
+ *     summary: Get list of the tutorials
+ *     tags: [Tutorials]
+ *     responses:
+ *       200:
+ *         description: The list of the tutorials
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Tutorial'
+ */
+
+router.get("/get-all", Tutorial.getTutorial);
+
+/**
+ * @swagger
+ * /tutorials/{id}:
+ *   get:
+ *     summary: Get tutorial by id
+ *     tags: [Tutorials]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The tutorial id
+ *     responses:
+ *       200:
+ *         description: The tutorial description by id
+ *         contens:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Tutorial'
+ *       404:
+ *         description: The tutorial was not found
+ */
+
+router.get("/tutorials/:id", Tutorial.findOne);
+
+/**
+ * @swagger
+ * /title:
+ *   get:
+ *     tags: [Tutorials]
+ *     summary: Search tutorials by title
+ *     parameters:
+ *       - in: query
+ *         name: title
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The tutorial title
+ *     responses:
+ *       200:
+ *         description: The tutorial description by Title
+ *         contens:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Tutorial'
+ *       404:
+ *         description: The tutorial was not found
+ */
+
+router.get("/title", Tutorial.findTutorial);
+
+/**
+ * @swagger
+ * /sorting/sort:
+ *   get:
+ *     summary: Get list of the tutorials
+ *     tags: [Tutorials]
+ *     responses:
+ *       200:
+ *         description: The list of the tutorials
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Tutorial'
+ */
+
+router.get("/sorting/sort", Tutorial.getsortTutorial);
 
 module.exports = router;

@@ -10,4 +10,5 @@ const tutorialValidations = {
   },
 };
 
+
 module.exports = tutorialValidations;

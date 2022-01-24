@@ -1,17 +1,17 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const expressvalidator = require("express-validator");
 const tutorial = require("./routes/tutorialroutes");
 const swaggerUi = require("swagger-ui-express");
 const swaggerjsdoc = require("swagger-jsdoc");
-const postRoutes = require("./routes/tutorialroutes");
+const dotEnv = require("dotenv");
+dotEnv.config();
 
 mongoose.Promise = global.Promise;
 mongoose
-  .connect("mongodb://localhost:27017/Tutorialnew", {
-    useNewUrlParser: true,
-  })
+  .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("Database connected");
   })
@@ -30,22 +30,25 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:8080",
+        url: "http://localhost:8000",
       },
     ],
   },
   apis: ["./routes/*.js"],
 };
+
 const specs = swaggerjsdoc(options);
 
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
-
 app.use(bodyParser.json());
 app.use("/", tutorial);
-app.use("/", postRoutes);
 app.use(expressvalidator());
+app.use(express.json(), cors());
+
+app.use("/users", require("./routes/userroutes"));
+
 
 app.get("/", (req, res) => {
   res.json({ message: "Server is running" });
@@ -53,7 +56,7 @@ app.get("/", (req, res) => {
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
   console.log(`Server listening on port number ${PORT}.`);
 });

@@ -1,4 +1,5 @@
 const Tutorial = require("../models/tutorialmodel.js");
+//const User = require("../models/usersmodel.js");
 
 // Create and Save a tutorial
 exports.create = (req, res) => {
@@ -20,7 +21,7 @@ exports.create = (req, res) => {
 };
 
 // list all tutorial from the database.
-exports.findAll = (req, res) => {
+exports.getTutorial = (req, res) => {
   Tutorial.find()
     .then((data) => {
       res.send(data);
@@ -55,22 +56,7 @@ exports.findOne = (req, res) => {
     });
 };
 
-//search by title
-exports.findnew = (req, res) => {
-  const title = req.params.title;
-  const condition = title
-    ? { title: { $regex: new RegExp(title), $options: "n" } }
-    : {};
-  Tutorial.find(condition)
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(404).send({
-        message: err.message || "404 not found",
-      });
-    });
-};
+
 
 // Update a tutorial with the id
 exports.update = (req, res) => {
@@ -101,6 +87,7 @@ exports.update = (req, res) => {
     });
 };
 
+
 // Delete a tutorial with id
 exports.delete = (req, res) => {
   Tutorial.findByIdAndRemove(req.params.id)
@@ -122,4 +109,41 @@ exports.delete = (req, res) => {
         message: "Could not delete tutorial with id " + req.params.id,
       });
     });
+};
+
+//search by title
+exports.findTutorial = (req, res) => {
+  const title = req.query.title;
+  var condition = title ? { title: { $regex: new RegExp(title), $options: "t" } } : {};
+
+  Tutorial.find(condition)
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving tutorials."
+      });
+    });
+};
+
+
+exports.getsortTutorial = (req, res) => {
+  try {
+    const mysort = { updatedAt: -1 };
+    const tutorial = Tutorial.find()
+      .sort(mysort)
+      .then((tutorial) => {
+        if (tutorial == null || tutorial === '') {
+          res.send('Tutorial Not Found');
+        } else {
+          res.json({
+            tutorial,
+          });
+        }
+      });
+  } catch (error) {
+    res.status(302).json(error.message);
+  }
 };
