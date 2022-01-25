@@ -1,14 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const cleanBody = require("../middlewares/cleanbody");
-const { validateToken } = require("../middlewares/validateToken");
 const AuthController = require("../controllers/usercontroller");
 //Define endpoints
-router.post("/signup", cleanBody, AuthController.Signup);
-router.post("/login", cleanBody, AuthController.Login)
-router.patch("/activate", cleanBody, AuthController.Activate)
-router.patch("/forgot",cleanBody, AuthController.ForgotPassword);
-router.patch("/reset",cleanBody,AuthController.ResetPassword);
-router.get("/referred", validateToken, AuthController.ReferredAccounts);
-router.get("/logout", validateToken, AuthController.Logout);
+router.post("/register", AuthController.Register);
+router.post("/login", AuthController.Login)
+router.patch("/activate", AuthController.Activate)
+router.patch("/forgot", AuthController.ForgotPassword);
+router.patch("/reset", AuthController.ResetPassword);
 module.exports = router;
